@@ -5,5 +5,5 @@ docker build -t cpp-hello-world .
 docker run cpp-hello-world
 
 ## Build and Run if in Container
-g++ -o hello hello.cpp
+g++ -o hello hello.cpp  
 ./hello
