@@ -1,0 +1,118 @@
+use std::fs::{self, File};
+use std::io::{self, Write, BufReader, BufRead};
+use std::path::Path;
+
+#[derive(Debug)]
+struct Task {
+    description: String,
+}
+
+impl Task {
+    fn new(description: &str) -> Task {
+        Task {
+            description: description.to_string(),
+        }
+    }
+}
+
+fn main() {
+    // Load existing tasks from file
+    let mut tasks = load_tasks();
+
+    loop {
+        println!("\nTo-Do List");
+        println!("1. View tasks");
+        println!("2. Add a task");
+        println!("3. Remove a task");
+        println!("4. Exit");
+
+        let mut choice = String::new();
+        io::stdin()
+            .read_line(&mut choice)
+            .expect("Failed to read line");
+        let choice: u32 = match choice.trim().parse() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("Please enter a valid number.");
+                continue;
+            }
+        };
+
+        match choice {
+            1 => view_tasks(&tasks),
+            2 => {
+                let mut description = String::new();
+                println!("Enter task description:");
+                io::stdin()
+                    .read_line(&mut description)
+                    .expect("Failed to read line");
+                let task = Task::new(description.trim());
+                tasks.push(task);
+                save_tasks(&tasks);
+            }
+            3 => {
+                println!("Enter the index of the task to remove:");
+                let mut index = String::new();
+                io::stdin()
+                    .read_line(&mut index)
+                    .expect("Failed to read line");
+                let index: usize = match index.trim().parse() {
+                    Ok(num) => num,
+                    Err(_) => {
+                        println!("Please enter a valid number.");
+                        continue;
+                    }
+                };
+                if index < tasks.len() {
+                    tasks.remove(index);
+                    save_tasks(&tasks);
+                } else {
+                    println!("Invalid index.");
+                }
+            }
+            4 => {
+                println!("Exiting...");
+                break;
+            }
+            _ => println!("Invalid choice, please try again."),
+        }
+    }
+}
+
+fn view_tasks(tasks: &[Task]) {
+    if tasks.is_empty() {
+        println!("No tasks to display.");
+    } else {
+        for (index, task) in tasks.iter().enumerate() {
+            println!("{}. {}", index, task.description);
+        }
+    }
+}
+
+fn save_tasks(tasks: &[Task]) {
+    let path = "tasks.txt";
+    let mut file = File::create(path).expect("Unable to open file");
+
+    for task in tasks {
+        writeln!(file, "{}", task.description)
+            .expect("Unable to write data to file");
+    }
+}
+
+fn load_tasks() -> Vec<Task> {
+    let path = "tasks.txt";
+    if !Path::new(path).exists() {
+        return Vec::new();
+    }
+
+    let file = File::open(path).expect("Unable to open file");
+    let reader = BufReader::new(file);
+    let mut tasks = Vec::new();
+
+    for line in reader.lines() {
+        let description = line.expect("Unable to read line");
+        tasks.push(Task::new(&description));
+    }
+
+    tasks
+}

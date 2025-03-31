@@ -1,7 +1,7 @@
 // File: app.js
 
 const express = require('express');
-const { Pool } = require('pg');
+const { pool } = require('./db');
 const path = require('path');
 const dotenv = require('dotenv');
 
@@ -9,12 +9,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
-
-// Create a new PostgreSQL connection pool
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
 
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -43,7 +37,7 @@ app.post('/register', async (req, res) => {
 
 // Login an existing user
 app.post('/login', async (req, res) => {
-  const { username } = req.body;
+  const username = req.body.username;
   try {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
     if (result.rows.length === 0) {
@@ -158,8 +152,9 @@ app.post('/admin/words', async (req, res) => {
   const { words } = req.body; // Expects an array of words
   try {
     await pool.query('TRUNCATE TABLE words');
-    const insertValues = words.map(word => `('${word}')`).join(', ');
-    await pool.query(`INSERT INTO words (word) VALUES ${insertValues}`);
+    words.each(async (word)=>{
+      await pool.query('INSERT INTO words (word) VALUES ($1)',[word]);
+    })
     res.status(201).json({ message: 'Words updated successfully' });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -171,7 +166,4 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+module.exports = { app };

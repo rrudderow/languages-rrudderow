@@ -4,11 +4,10 @@ up:
 	docker compose up -d --build
 logs:
 	docker logs hangman-app -f
+.PHONY: tests
+tests:
+	docker logs -f hangman-test-runner
 down:
 	docker compose down
 shell:
-	docker exec -it hangman-app sh -i
-reset:
-	docker compose down -v
-	/bin/rm -rf node_modules
-	docker compose build --no-cache
+	docker exec -it hangman-app bash -i
