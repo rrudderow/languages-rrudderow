@@ -1,29 +1,46 @@
 use std::io;
 
 fn main() {
-    println!("Basic Math Calculator in Rust");
+    let mut count=String::new();
+    //let mut num1=String::new();
+    //let mut num2=String::new();
+    loop {
 
-    // Get first number
-    println!("Enter the first number:");
-    let mut input1 = String::new();
-    io::stdin().read_line(&mut input1).expect("Failed to read input");
-    let num1: f64 = input1.trim().parse().expect("Please enter a valid number");
+        println!("Please choose one of the following:");
+        println!("1) Addition");
+        println!("2) Subtraction");
+        println!("3) Multiplication");
+        println!("4) Division");
+        println!("5) Exit");
 
-    // Get second number
-    println!("Enter the second number:");
-    let mut input2 = String::new();
-    io::stdin().read_line(&mut input2).expect("Failed to read input");
-    let num2: f64 = input2.trim().parse().expect("Please enter a valid number");
+        io::stdin()
+            .read_line(&mut count)
+            .expect("Failed to read line");
 
-    // Perform calculations
-    println!("Addition: {} + {} = {}", num1, num2, num1 + num2);
-    println!("Subtraction: {} - {} = {}", num1, num2, num1 - num2);
-    println!("Multiplication: {} * {} = {}", num1, num2, num1 * num2);
-    
-    // Check for division by zero
-    if num2 != 0.0 {
-        println!("Division: {} / {} = {}", num1, num2, num1 / num2);
-    } else {
-        println!("Division by zero is not allowed.");
+        let count: i32 = count
+            .trim()              // Remove newline and spaces
+            .parse()             // Try parsing it into i32
+            .expect("Not a valid number");
+
+        match count {
+            1 => {
+                println!("Please enter two numbers: ");
+            },
+            2 => {
+
+            },
+            3 => {
+
+            },
+            4 => {
+
+            },
+            5 => {
+                break;
+            },
+            _ => {
+                println!("Invalid Input: Please try again");
+            }
+        }
     }
 }
