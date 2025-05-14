@@ -37,19 +37,20 @@ fn main() {
         match count {
             1 => {
                 let (num1, num2) = num_input();
-                println!("The numbers you entered: {} {}", num1, num2);
+                println!("{} + {} = {}", num1, num2, num1 + num2);
             },
             2 => {
                 let (num1, num2) = num_input();
-                println!("The numbers you entered: {} {}", num1, num2);
+                println!("{} - {} = {}", num1, num2, num1 - num2);
             },
             3 => {
                 let (num1, num2) = num_input();
-                println!("The numbers you entered: {} {}", num1, num2);
+                println!("{} * {} = {}", num1, num2, num1 * num2);
             },
             4 => {
                 let (num1, num2) = num_input();
-                println!("The numbers you entered: {} {}", num1, num2);
+                println!("{} / {} = {}", num1, num2, num1 / num2);
+                println!("Remainder: {}", num1 % num2);
             },
             5 => {
                 break;
