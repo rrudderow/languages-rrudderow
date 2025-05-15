@@ -7,9 +7,9 @@ fn num_input() -> (i32, i32) {
 
     let mut parts = input.trim().split_whitespace();
     let num1: i32 = parts.next().expect("Missing first number")
-    .trim().parse().expect("Invalid number");
+        .trim().parse().expect("Invalid number");
     let num2: i32 = parts.next().expect("Missing second number")
-    .trim().parse().expect("Invalid number");
+        .trim().parse().expect("Invalid number");
 
     (num1, num2)
 }
